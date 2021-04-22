@@ -3,43 +3,18 @@ language: python
 
 matrix:
     include:
-        - python: '2.7'
-          dist: bionic
-          env:
-            - COVERAGE="true"
-
         - python: '3.6'
           env:
             - COVERAGE="true"
-
+        - python: '3.6'
+          arch: arm64
+          env:
+            - COVERAGE="true" 
         - python: '3.7'
           env:
-
-        - python: '3.8'
+        - python: '3.7'
+          arch: arm64
           env:
-
-        - python: '3.9'
-          env:
-
-        - python: '3.10-dev'
-          env:
-
-        - python: 'nightly'
-          env:
-
-        - python: 'pypy'
-          dist: xenial
-          env:
-
-        - python: 'pypy3'
-          env:
-
-    allow_failures:
-        - python: '2.7'
-        - python: 'pypy'
-        - python: '3.10-dev'
-        - python: 'nightly'
-    fast_finish: true
 
 cache:
     pip: true
@@ -54,6 +29,7 @@ install:
 script:
     - for test in tests/__init__.py; do echo $test ; if [[ $COVERAGE == "true" ]]; then coverage run -a $test > /dev/null; else python $test > /dev/null; fi ; done
     - for test in tests/test_*.py; do echo $test ; if [[ $COVERAGE == "true" ]]; then coverage run -a $test > /dev/null; else python $test > /dev/null; fi ; done
+    - pytest
 
 after_success:
     - if [[ $COVERAGE == "true" ]]; then bash <(curl -s https://codecov.io/bash); else echo ''; fi
